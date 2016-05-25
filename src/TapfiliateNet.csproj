@@ -51,6 +51,9 @@
     <Compile Include="Model\Conversion.cs" />
     <Compile Include="Model\Payout.cs" />
     <Compile Include="Model\Program.cs" />
+    <Compile Include="Model\Request\AffiliateRequest.cs" />
+    <Compile Include="Model\Request\CommissionRequest.cs" />
+    <Compile Include="Model\Request\ConversionRequest.cs" />
     <Compile Include="TapfiliateClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
