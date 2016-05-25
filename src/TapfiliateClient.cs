@@ -72,16 +72,30 @@ namespace TapfiliateNet
 
         public Affiliate GetAffiliate(string affiliateId)
         {
-            var url = $"{BaseUrl}/affiliates/{affiliateId}/";
+            var url = BaseUrl + "/affiliates/" + affiliateId + "/";
 
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<Affiliate>(response);
         }
 
+        public IList<Affiliate> GetAffiliateList()
+        {
+            return GetAffiliateList(null,null);
+        }
+
         public IList<Affiliate> GetAffiliateList(string clickId, string sourceId)
         {
-            var url = $"{BaseUrl}/affiliates/?click_id={clickId}&source_id={sourceId}";
+            var url = BaseUrl + "/affiliates/";
+            if (!String.IsNullOrEmpty(clickId))
+            {
+                url = AddQueryStringToUrl(url,"click_id",clickId);
+            }
+            if (!String.IsNullOrEmpty(sourceId))
+            {
+                url = AddQueryStringToUrl(url,"source_id",sourceId);
+            }
+           
 
             var response = HttpClient.GetAsync(url).Result;
 
@@ -90,7 +104,7 @@ namespace TapfiliateNet
 
         public Affiliate CreateAffiliate(Affiliate affiliate)
         {
-            var url = $"{BaseUrl}/affiliates/";
+            var url = BaseUrl + "/affiliates/";
 
             var payLoad = JsonConvert.SerializeObject(affiliate);
 
@@ -101,16 +115,18 @@ namespace TapfiliateNet
 
         public IDictionary<string, string> GetAffiliateMetadata(string affiliateId, string key)
         {
-            var url = $"{BaseUrl}/affiliates/{affiliateId}/meta-data/{key}";
+            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/";
+            if (!String.IsNullOrEmpty(key))
+                url += key;
 
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<IDictionary<string, string>>(response);
         }
 
-        public bool PostAffiliateMetadata(string affiliateId, IDictionary<string, string> metadata)
+        public bool SetAffiliateMetadata(string affiliateId, IDictionary<string, string> metadata)
         {
-            var url = $"{BaseUrl}/affiliates/{affiliateId}/meta-data/";
+            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/";
 
             var payLoad = JsonConvert.SerializeObject(metadata);
 
@@ -119,9 +135,9 @@ namespace TapfiliateNet
             return response.StatusCode == HttpStatusCode.NoContent;
         }
 
-        public bool SetAffiliateMetadata(string affiliateId, string key, string value)
+        public bool UpdateAffiliateMetadataKey(string affiliateId, string key, string value)
         {
-            var url = $"{BaseUrl}/affiliates/{affiliateId}/meta-data/{key}/";
+            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/" + key;
 
             var payLoad = JsonConvert.SerializeObject(new { value = value });
 
@@ -130,9 +146,9 @@ namespace TapfiliateNet
             return response.StatusCode == HttpStatusCode.NoContent;
         }
 
-        public bool DeleteAffiliateMetadata(string affiliateId, string key)
+        public bool DeleteAffiliateMetadataKey(string affiliateId, string key)
         {
-            var url = $"{BaseUrl}/affiliates/{affiliateId}/meta-data/{key}";
+            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/" + key;
 
             var response = HttpClient.DeleteAsync(url).Result;
 
@@ -141,6 +157,7 @@ namespace TapfiliateNet
 
         #endregion
 
+        #region Utils
         private T GetResponse<T>(HttpResponseMessage response)
         {
             var body = response.Content.ReadAsStringAsync().Result;
@@ -154,6 +171,18 @@ namespace TapfiliateNet
 
             throw new Exception(response.StatusCode + " - " + body);
         }
+
+        private string AddQueryStringToUrl(string url,string key, string value)
+        {
+            if (url.LastIndexOf("/") == (url.Length -1))
+                url += "?" + key + "=" + value;
+            else
+                url += "&" + key + "=" + value;
+            
+            return url;
+        }
+
+        #endregion
 
     }
 }
