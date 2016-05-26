@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TapfiliateNet.Model
 {
-    public abstract class AffiliateMaster
+    public abstract class AffiliateBase
     {
         [JsonProperty("firstname")]
         public string FirstName { get; set; }

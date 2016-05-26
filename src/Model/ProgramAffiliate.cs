@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TapfiliateNet.Model
 {
-    public class ProgramAffiliate : AffiliateMaster
+    public class ProgramAffiliate : AffiliateBase
     {
         [JsonProperty("referral_link")]
         public string ReferralLink { get; set; }

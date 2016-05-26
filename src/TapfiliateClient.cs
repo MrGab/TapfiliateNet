@@ -331,8 +331,6 @@ namespace TapfiliateNet
             return GetResponse<IList<Program>>(response);
         }
 
-        
-
         #endregion
 
         #region Utils

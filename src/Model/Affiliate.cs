@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace TapfiliateNet.Model
 {
-    public class Affiliate : AffiliateMaster
+    public class Affiliate : AffiliateBase
     {
         [JsonProperty("affiliate_id")]
         public string AffiliateId { get; set; }

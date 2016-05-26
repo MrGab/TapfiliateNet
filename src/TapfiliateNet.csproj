@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Affiliate.cs" />
-    <Compile Include="Model\AffiliateMaster.cs" />
+    <Compile Include="Model\AffiliateBase.cs" />
     <Compile Include="Model\Commission.cs" />
     <Compile Include="Model\Conversion.cs" />
     <Compile Include="Model\Payout.cs" />
