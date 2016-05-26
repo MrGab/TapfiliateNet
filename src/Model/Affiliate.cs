@@ -26,6 +26,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("meta_data")]
         public IDictionary<string, string> Metadata { get; set; }
     }
+
     public class AffiliateCompany
     {
         [JsonProperty("name")]
@@ -34,6 +35,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("address")]
         public AffiliateCompanyAddress Address { get; set; }
     }
+
     public class AffiliateCompanyAddress
     {
         [JsonProperty("address")]
@@ -51,6 +53,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("country")]
         public AffiliateCompanyAddressCountry Country { get; set; }
     }
+
     public class AffiliateCompanyAddressCountry
     {
         [JsonProperty("code")]

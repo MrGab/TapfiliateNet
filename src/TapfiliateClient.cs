@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using TapfiliateNet.Model;
-using TapfiliateNet.Model.Request;
+using TapfiliateNet.Request;
 
 //.NET 4.5+ only
 
@@ -19,87 +19,110 @@ namespace TapfiliateNet
 {
     public sealed class TapfiliateClient
     {
-        private const string BaseUrl = "https://tapfiliate.com/api/1.4/";
-        private int TimeoutSeconds = 0;
-        private readonly string ApiKey;
+        #region Constants and Fields
 
-        private JsonSerializerSettings SerializerSettings
-        {
-            get
-            {
-                var serializer = new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                };
-                serializer.Converters.Add(new StringEnumConverter { CamelCaseText = true });
+        /// <summary>
+        /// The api endpoint.
+        /// </summary>
+        private const string _baseUrl = "http://tapfiliate.com/api";
 
-                return serializer;
-            }
-        }
+        /// <summary>
+        /// The api version.
+        /// </summary>
+        private const string _version = "1.4";
+
+        /// <summary>
+        /// The api key.
+        /// </summary>
+        private readonly string _apiKey;
+
+        /// <summary>
+        /// Timeout (in seconds)
+        /// </summary>
+        private readonly int _timeout = 0;
+
+        /// <summary>
+        /// Http Client for API requests
+        /// </summary>
         private HttpClient HttpClient
         {
             get
             {
-                var client = new HttpClient();
-
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Add("Api-Key", ApiKey);
-
-                if (TimeoutSeconds != 0)
+                using (var client = new HttpClient())
                 {
-                    client.Timeout = TimeSpan.FromSeconds(TimeoutSeconds);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Add("Api-Key", _apiKey);
+
+                    if (_timeout != 0)
+                {
+                        client.Timeout = TimeSpan.FromSeconds(_timeout);
                 }
 
                 return client;
             } 
         }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Initialize Tapfiliate API Client
+        /// </summary>
+        /// <param name="apiKey">API Key</param>
         public TapfiliateClient(string apiKey)
         {
-            ApiKey = apiKey;
+            _apiKey = apiKey;
         }
-        public TapfiliateClient(string apiKey, int timeoutSeconds)
+
+
+        /// <summary>
+        /// Initialize Tapfiliate API Client
+        /// </summary>
+        /// <param name="apiKey">API Key</param>
+        /// <param name="timeout">Request timeout in seconds.</param>
+        public TapfiliateClient(string apiKey, int timeout)
         {
-            ApiKey = apiKey;
-            TimeoutSeconds = timeoutSeconds;
+            _apiKey = apiKey;
+            _timeout = timeout;
         }
 
         #region Affiliate
 
         public Affiliate GetAffiliate(string affiliateId)
         {
-            var url = BaseUrl + "/affiliates/" + affiliateId + "/";
+            var url = GetRequestUrl("/affiliates/{0}/", affiliateId);
 
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<Affiliate>(response);
         }
+
         public IList<Affiliate> GetAllAffiliates()
         {
-            return GetAffiliateList(null,null);
+            return GetAffiliateList(null, null);
         }
+
         public IList<Affiliate> GetAffiliateList(string clickId, string sourceId)
         {
-            var url = BaseUrl + "/affiliates/";
-            if (!String.IsNullOrEmpty(clickId))
+            var url = GetRequestUrl("/affiliates/");
+
+            if (!string.IsNullOrEmpty(clickId))
             {
-                url = AddQueryStringToUrl(url,"click_id",clickId);
+                url = AddQueryStringToUrl(url, "click_id", clickId);
             }
-            if (!String.IsNullOrEmpty(sourceId))
+            if (!string.IsNullOrEmpty(sourceId))
             {
-                url = AddQueryStringToUrl(url,"source_id",sourceId);
+                url = AddQueryStringToUrl(url, "source_id", sourceId);
             }
            
-
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<IList<Affiliate>>(response);
         }
+
         public Affiliate CreateAffiliate(AffiliateRequest affiliateRequest)
         {
-            var url = BaseUrl + "/affiliates/";
+            var url = GetRequestUrl("/affiliates/");
 
             var payLoad = JsonConvert.SerializeObject(affiliateRequest);
 
@@ -107,19 +130,22 @@ namespace TapfiliateNet
 
             return GetResponse<Affiliate>(response);
         }
+
         public IDictionary<string, string> GetAffiliateMetadata(string affiliateId, string key)
         {
-            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/";
-            if (!String.IsNullOrEmpty(key))
+            var url = GetRequestUrl("/affiliates/{0}/meta-data/", affiliateId);
+
+            if (!string.IsNullOrEmpty(key))
                 url += key;
 
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<IDictionary<string, string>>(response);
         }
+
         public bool SetAffiliateMetadata(string affiliateId, IDictionary<string, string> metadata)
         {
-            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/";
+            var url = GetRequestUrl("/affiliates/{0}/meta-data/", affiliateId);
 
             var payLoad = JsonConvert.SerializeObject(metadata);
 
@@ -127,9 +153,10 @@ namespace TapfiliateNet
 
             return response.StatusCode == HttpStatusCode.NoContent;
         }
+
         public bool UpdateAffiliateMetadataKey(string affiliateId, string key, string value)
         {
-            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/" + key;
+            var url = GetRequestUrl("/affiliates/{0}/meta-data/{1}/", affiliateId, key);
 
             var payLoad = JsonConvert.SerializeObject(new { value = value });
 
@@ -137,9 +164,10 @@ namespace TapfiliateNet
 
             return response.StatusCode == HttpStatusCode.NoContent;
         }
+
         public bool DeleteAffiliateMetadataKey(string affiliateId, string key)
         {
-            var url = BaseUrl + "/affiliates/" + affiliateId + "/meta-data/" + key;
+            var url = GetRequestUrl("/affiliates/{0}/meta-data/{1}/", affiliateId, key);
 
             var response = HttpClient.DeleteAsync(url).Result;
 
@@ -152,7 +180,7 @@ namespace TapfiliateNet
 
         public Conversion GetConversion(string conversionId)
         {
-            var url = BaseUrl + "/conversions/" + conversionId + "/";
+            var url = GetRequestUrl("/conversions/{0}/", conversionId);
 
             var response = HttpClient.GetAsync(url).Result;
 
@@ -161,42 +189,42 @@ namespace TapfiliateNet
 
         public IList<Conversion> GetAllConversions()
         {
-            var url = BaseUrl + "/conversions/";
-            var response = HttpClient.GetAsync(url).Result;
-
-            return GetResponse<IList<Conversion>>(response);
+            return GetConversionList(null, null, null, null, null, null);
         }
 
         public IList<Conversion> GetConversionList(
             string programId,
             string externalId,
             string affiliateId,
-            bool pending,
-            DateTime dateFrom,
-            DateTime dateTo )
+            bool? pending,
+            DateTime? dateFrom,
+            DateTime? dateTo)
         {
-            var url = BaseUrl + "/conversions/";
-            if (!String.IsNullOrEmpty(programId))
+            var url = GetRequestUrl("/conversions/");
+
+            if (!string.IsNullOrEmpty(programId))
             {
                 url = AddQueryStringToUrl(url, "program_id", programId);
             }
-            if (!String.IsNullOrEmpty(externalId))
+            if (!string.IsNullOrEmpty(externalId))
             {
                 url = AddQueryStringToUrl(url, "external_id", externalId);
             }
-            if (!String.IsNullOrEmpty(affiliateId))
+            if (!string.IsNullOrEmpty(affiliateId))
             {
                 url = AddQueryStringToUrl(url, "affiliate_id", affiliateId);
             }
-
+            if (pending != null)
+            {
             url = AddQueryStringToUrl(url, "pending", Convert.ToString(Convert.ToInt32(pending)));
+            }
             if (dateFrom != null)
             {
-                url = AddQueryStringToUrl(url, "date_from", dateFrom.ToString("yyyy-MM-dd"));
+                url = AddQueryStringToUrl(url, "date_from", dateFrom.Value.ToString("yyyy-MM-dd"));
             }
             if (dateTo != null)
             {
-                url = AddQueryStringToUrl(url, "date_to", dateTo.ToString("yyyy-MM-dd"));
+                url = AddQueryStringToUrl(url, "date_to", dateTo.Value.ToString("yyyy-MM-dd"));
             }
             
             var response = HttpClient.GetAsync(url).Result;
@@ -204,9 +232,14 @@ namespace TapfiliateNet
             return GetResponse<IList<Conversion>>(response);
         }
 
-        public Conversion CreateConversion (ConversionRequest conversionRequest, bool overrideMaxCookieTime)
+        public Conversion CreateConversion(ConversionRequest conversionRequest, bool? overrideMaxCookieTime)
         {
-            var url = BaseUrl + "/conversions/?override_max_cookie_time=" + Convert.ToString(overrideMaxCookieTime);
+            var url = GetRequestUrl("/conversions/");
+
+            if (overrideMaxCookieTime != null)
+        {
+                url = AddQueryStringToUrl(url, "override_max_cookie_time", Convert.ToString(overrideMaxCookieTime));
+            }
 
             var payLoad = JsonConvert.SerializeObject(conversionRequest);
 
@@ -215,9 +248,9 @@ namespace TapfiliateNet
             return GetResponse<Conversion>(response);
         }
 
-        public IList<Commission> addCommissionsToConversion (string conversionId, IList<CommissionRequest>commissionRequests)
+        public IList<Commission> AddCommissionsToConversion(string conversionId, IList<CommissionRequest> commissionRequests)
         {
-            var url = BaseUrl + "/conversions/" + conversionId + "/commissions/";
+            var url = GetRequestUrl("/conversions/{0}/commissions/", conversionId);
 
             var payLoad = JsonConvert.SerializeObject(commissionRequests);
 
@@ -230,38 +263,38 @@ namespace TapfiliateNet
 
         #region Commission
 
-        public Commission GetCommission (string commissionId)
+        public Commission GetCommission(string commissionId)
         {
-            var url = BaseUrl + "/commissions/" + commissionId + "/";
+            var url = GetRequestUrl("/commissions/{0}/", commissionId);
 
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<Commission>(response);
         }
 
-        public bool UpdateCommission(string commissionId, CommissionUpdateRequest commissionUpdateRequest)
+        public bool UpdateCommission(string commissionId, decimal amount, string comment)
         {
-            var url = BaseUrl + "/commissions/" + commissionId + "/";
+            var url = GetRequestUrl("/commissions/{0}/", commissionId);
 
-            var payLoad = JsonConvert.SerializeObject(commissionUpdateRequest);
+            var payLoad = JsonConvert.SerializeObject(new { amount = amount, comment = comment });
 
             var response = HttpClient.PutAsync(url, new StringContent(payLoad)).Result;
 
             return response.StatusCode == HttpStatusCode.NoContent;
         }
 
-        public bool ApproveCommission(string commissionId, bool approved)
+        public bool ApproveCommission(string commissionId)
         {
-            var url = BaseUrl + "/commissions/" + commissionId + "/approval";
+            var url = GetRequestUrl("/commissions/{0}/approval/", commissionId);
 
-            var response = HttpClient.PutAsync(url, new StringContent("")).Result;
+            var response = HttpClient.PutAsync(url, null).Result;
 
             return response.StatusCode == HttpStatusCode.NoContent;
         }
 
-        public bool DeleteCommission(string commissionId, bool approved)
+        public bool DisapproveCommission(string commissionId)
         {
-            var url = BaseUrl + "/commissions/" + commissionId + "/approval";
+            var url = GetRequestUrl("/commissions/{0}/approval/", commissionId);
 
             var response = HttpClient.DeleteAsync(url).Result;
 
@@ -270,37 +303,17 @@ namespace TapfiliateNet
 
         #endregion
 
-        #region Program
-
-        public Program GetProgram(string programId)
-        {
-            var url = BaseUrl + "/programs/" + programId + "/";
-
-            var response = HttpClient.GetAsync(url).Result;
-
-            return GetResponse<Program>(response);
-        }
-
-        public IList<Program> GetAllPrograms (string assetId)
-        {
-            return GetProgramList(null);
-        }
-
-        public IList<Program> GetProgramList (string assetId)
-        {
-            var url = BaseUrl + "/programs/";
-
-            if (assetId != null)
-                url = AddQueryStringToUrl(url, "asset_id", assetId);
-
-            var response = HttpClient.GetAsync(url).Result;
-
-            return GetResponse<IList<Program>>(response);
-        }
-
-        #endregion
-
         #region Utils
+
+        private string GetRequestUrl(string relativePath, params object[] args)
+        {
+            var relativeUrl = string.Format(relativePath, args);
+
+            var baseUrl = _baseUrl + "/" + _version;
+
+            return baseUrl + (relativeUrl.StartsWith("/") ? relativeUrl : "/" + relativeUrl);
+        }
+
         private T GetResponse<T>(HttpResponseMessage response)
         {
             var body = response.Content.ReadAsStringAsync().Result;
@@ -314,6 +327,7 @@ namespace TapfiliateNet
 
             throw new Exception(response.StatusCode + " - " + body);
         }
+
         private string AddQueryStringToUrl(string url,string key, string value)
         {
             if (url.LastIndexOf("/") == (url.Length -1))
