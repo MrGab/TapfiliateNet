@@ -46,14 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Affiliate.cs" />
-    <Compile Include="Model\Click.cs" />
     <Compile Include="Model\Commission.cs" />
-    <Compile Include="Model\Company.cs" />
     <Compile Include="Model\Conversion.cs" />
-    <Compile Include="Model\Country.cs" />
+    <Compile Include="Model\Payout.cs" />
     <Compile Include="Model\Program.cs" />
+    <Compile Include="Model\Request\AffiliateRequest.cs" />
+    <Compile Include="Model\Request\CommissionRequest.cs" />
+    <Compile Include="Model\Request\ConversionRequest.cs" />
     <Compile Include="TapfiliateClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

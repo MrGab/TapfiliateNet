@@ -19,7 +19,7 @@ namespace TapfiliateNet.Model
         public decimal Amount { get; set; }
 
         [JsonProperty("click")]
-        public Click Click { get; set; }
+        public ConversionClick Click { get; set; }
 
         [JsonProperty("commissions")]
         public IList<Commission> Commissions { get; set; }
@@ -32,5 +32,11 @@ namespace TapfiliateNet.Model
 
         [JsonProperty("meta_data")]
         public IDictionary<string, string> Metadata { get; set; }
+    }
+
+    public class ConversionClick
+    {
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; set; }
     }
 }
