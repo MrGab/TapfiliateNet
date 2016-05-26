@@ -368,6 +368,58 @@ namespace TapfiliateNet
 
         #endregion
 
+        #region Payout
+
+        public Payout GetPayout(string payoutId)
+        {
+            var url = GetRequestUrl("/payouts/{0}/", payoutId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<Payout>(response);
+        }
+
+        public IList<Payout> GetAllPayouts()
+        {
+            var url = GetRequestUrl("/payouts/");
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<IList<Payout>>(response);
+        }
+
+        public IList<Payout> CreatePayout(PayoutRequest payoutRequest)
+        {
+            var url = GetRequestUrl("/payouts/");
+
+            var payLoad = JsonConvert.SerializeObject(payoutRequest);
+
+            var response = HttpClient.PostAsync(url, new StringContent(payLoad)).Result;
+
+            return GetResponse<IList<Payout>>(response);
+        }
+
+        public bool MarkPayoutAsPaid(string payoutId)
+        {
+            var url = GetRequestUrl("/payouts/{0}/paid", payoutId);
+
+            var response = HttpClient.PutAsync(url, null).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public bool MarkPayoutAsUnpaid(string payoutId)
+        {
+            var url = GetRequestUrl("/payouts/{0}/paid", payoutId);
+
+            var response = HttpClient.DeleteAsync(url).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+
+        #endregion
+
         #region Utils
 
         private string GetRequestUrl(string relativePath, params object[] args)
