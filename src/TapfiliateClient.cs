@@ -25,7 +25,7 @@ namespace TapfiliateNet
         /// The api endpoint.
         /// </summary>
         private const string _baseUrl = "http://tapfiliate.com/api";
-        
+
         /// <summary>
         /// The api version.
         /// </summary>
@@ -50,17 +50,17 @@ namespace TapfiliateNet
             {
                 using (var client = new HttpClient())
                 {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.Add("Api-Key", _apiKey);
 
                     if (_timeout != 0)
-                {
+                    {
                         client.Timeout = TimeSpan.FromSeconds(_timeout);
-                }
+                    }
 
-                return client;
-            } 
-        }
+                    return client;
+                }
+            }
         }
 
         #endregion
@@ -114,7 +114,7 @@ namespace TapfiliateNet
             {
                 url = AddQueryStringToUrl(url, "source_id", sourceId);
             }
-           
+
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<IList<Affiliate>>(response);
@@ -216,7 +216,7 @@ namespace TapfiliateNet
             }
             if (pending != null)
             {
-            url = AddQueryStringToUrl(url, "pending", Convert.ToString(Convert.ToInt32(pending)));
+                url = AddQueryStringToUrl(url, "pending", Convert.ToString(Convert.ToInt32(pending)));
             }
             if (dateFrom != null)
             {
@@ -237,7 +237,7 @@ namespace TapfiliateNet
             var url = GetRequestUrl("/conversions/");
 
             if (overrideMaxCookieTime != null)
-        {
+            {
                 url = AddQueryStringToUrl(url, "override_max_cookie_time", Convert.ToString(overrideMaxCookieTime));
             }
 
@@ -307,7 +307,7 @@ namespace TapfiliateNet
 
         public Program GetProgram(string programId)
         {
-            var url = GetRequestUrl("/programs/{0}/",programId);
+            var url = GetRequestUrl("/programs/{0}/", programId);
 
             var response = HttpClient.GetAsync(url).Result;
 
@@ -316,19 +316,54 @@ namespace TapfiliateNet
 
         public IList<Program> GetAllPrograms(string assetId)
         {
-            return GetProgramList(null);
-        }
-
-        public IList<Program> GetProgramList(string assetId)
-        {
             var url = GetRequestUrl("/programs/");
 
-            if (assetId != null)
+            if (!string.IsNullOrEmpty(assetId))
+            {
                 url = AddQueryStringToUrl(url, "asset_id", assetId);
+            }
 
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<IList<Program>>(response);
+        }
+
+        public bool AddAffiliateToProgram(string programId, string affiliateId, bool? approved)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/", programId);
+
+            var payLoad = JsonConvert.SerializeObject(new { affiliate = new { id = affiliateId }, approved = approved });
+
+            var response = HttpClient.PostAsync(url, new StringContent(payLoad)).Result;
+
+            return response.StatusCode == HttpStatusCode.OK;
+        }
+
+        public bool ApproveAffiliate(string programId, string affiliateId)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/{1}/approval/", programId, affiliateId);
+
+            var response = HttpClient.PutAsync(url, null).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public bool DisapproveAffiliate(string programId, string affiliateId)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/{1}/approval/", programId, affiliateId);
+
+            var response = HttpClient.DeleteAsync(url).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public ProgramAffiliate GetProgramAffiliate(string programId, string affiliateId)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/{1}/", programId, affiliateId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<ProgramAffiliate>(response);
         }
 
         #endregion
