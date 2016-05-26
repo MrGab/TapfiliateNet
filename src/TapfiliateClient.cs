@@ -364,6 +364,25 @@ namespace TapfiliateNet
             return GetResponse<IList<Payout>>(response);
         }
 
+        public bool MarkPayoutAsPaid(string payoutId)
+        {
+            var url = GetRequestUrl("/payouts/{0}/paid", payoutId);
+
+            var response = HttpClient.PutAsync(url, null).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public bool MarkPayoutAsUnpaid(string payoutId)
+        {
+            var url = GetRequestUrl("/payouts/{0}/paid", payoutId);
+
+            var response = HttpClient.DeleteAsync(url).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+
         #endregion
 
         #region Utils
