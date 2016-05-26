@@ -3,11 +3,8 @@ using Newtonsoft.Json;
 
 namespace TapfiliateNet.Model
 {
-    public class Affiliate
+    public abstract class AffiliateBase
     {
-        [JsonProperty("affiliate_id")]
-        public string AffiliateId { get; set; }
-
         [JsonProperty("firstname")]
         public string FirstName { get; set; }
 
@@ -25,6 +22,18 @@ namespace TapfiliateNet.Model
 
         [JsonProperty("meta_data")]
         public IDictionary<string, string> Metadata { get; set; }
+    }
+
+    public class Affiliate : AffiliateBase
+    {
+        [JsonProperty("affiliate_id")]
+        public string AffiliateId { get; set; }
+    }
+
+    public class ProgramAffiliate : AffiliateBase
+    {
+        [JsonProperty("referral_link")]
+        public string ReferralLink { get; set; }
     }
 
     public class AffiliateCompany
