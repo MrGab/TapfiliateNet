@@ -1,11 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace TapfiliateNet.Model.Request
+namespace TapfiliateNet.Request
 {
     public class ConversionRequest
     {

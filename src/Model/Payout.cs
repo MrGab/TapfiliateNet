@@ -20,6 +20,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("paid")]
         public bool Paid { get; set; }
     }
+
     public class PayoutAffiliate
     {
         [JsonProperty("id")]
@@ -31,6 +32,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("payout_methods")]
         public IList<PayoutAffiliatePayoutMethod> PayoutMethods { get; set; }
     }
+
     public class PayoutAffiliatePayoutMethod
     {
         [JsonProperty("title")]
@@ -42,7 +44,9 @@ namespace TapfiliateNet.Model
         [JsonProperty("primary")]
         public bool Primary { get; set; }
     }
+
     public abstract class PayoutAffiliatePayoutMethodsDetail {}
+
     public class PayoutAffiliatePayoutMethodsDetailsPaypal : PayoutAffiliatePayoutMethodsDetail
     {
         [JsonProperty("paypal_address")]

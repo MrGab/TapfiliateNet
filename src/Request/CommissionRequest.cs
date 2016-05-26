@@ -1,13 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TapfiliateNet.Model.Request
+namespace TapfiliateNet.Request
 {
-    class CommissionRequest
+    public class CommissionRequest
     {
         [JsonProperty("id")]
         public int Id { get; set;}

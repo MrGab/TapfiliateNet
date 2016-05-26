@@ -1,13 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TapfiliateNet.Model.Request
+namespace TapfiliateNet.Request
 {
-    class AffiliateRequest
+    public class AffiliateRequest
     {
         [JsonProperty("firstname")]
         public string FirstName { get; set; }
@@ -24,6 +19,7 @@ namespace TapfiliateNet.Model.Request
         [JsonProperty("company")]
         public AffiliateRequestCompany Company { get; set; }
     }
+
     public class AffiliateRequestCompany
     {
         [JsonProperty("name")]
@@ -32,6 +28,7 @@ namespace TapfiliateNet.Model.Request
         [JsonProperty("address")]
         public AffiliateRequestCompanyAddress Address { get; set; }
     }
+
     public class AffiliateRequestCompanyAddress
     {
         [JsonProperty("address")]
@@ -49,6 +46,7 @@ namespace TapfiliateNet.Model.Request
         [JsonProperty("country")]
         public AffiliateRequestCompanyAddressCountry Country { get; set; }
     }
+
     public class AffiliateRequestCompanyAddressCountry
     {
         [JsonProperty("code")]
