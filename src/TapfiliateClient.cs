@@ -25,7 +25,7 @@ namespace TapfiliateNet
         /// The api endpoint.
         /// </summary>
         private const string _baseUrl = "http://tapfiliate.com/api";
-
+        
         /// <summary>
         /// The api version.
         /// </summary>
@@ -300,6 +300,38 @@ namespace TapfiliateNet
 
             return response.StatusCode == HttpStatusCode.NoContent;
         }
+
+        #endregion
+
+        #region Program
+
+        public Program GetProgram(string programId)
+        {
+            var url = GetRequestUrl("/programs/{0}/",programId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<Program>(response);
+        }
+
+        public IList<Program> GetAllPrograms(string assetId)
+        {
+            return GetProgramList(null);
+        }
+
+        public IList<Program> GetProgramList(string assetId)
+        {
+            var url = GetRequestUrl("/programs/");
+
+            if (assetId != null)
+                url = AddQueryStringToUrl(url, "asset_id", assetId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<IList<Program>>(response);
+        }
+
+        
 
         #endregion
 
