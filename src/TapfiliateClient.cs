@@ -303,6 +303,71 @@ namespace TapfiliateNet
 
         #endregion
 
+        #region Program
+
+        public Program GetProgram(string programId)
+        {
+            var url = GetRequestUrl("/programs/{0}/", programId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<Program>(response);
+        }
+
+        public IList<Program> GetAllPrograms(string assetId)
+        {
+            var url = GetRequestUrl("/programs/");
+
+            if (!string.IsNullOrEmpty(assetId))
+            {
+                url = AddQueryStringToUrl(url, "asset_id", assetId);
+            }
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<IList<Program>>(response);
+        }
+
+        public bool AddAffiliateToProgram(string programId, string affiliateId, bool? approved)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/", programId);
+
+            var payLoad = JsonConvert.SerializeObject(new { affiliate = new { id = affiliateId }, approved = approved });
+
+            var response = HttpClient.PostAsync(url, new StringContent(payLoad)).Result;
+
+            return response.StatusCode == HttpStatusCode.OK;
+        }
+
+        public bool ApproveAffiliate(string programId, string affiliateId)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/{1}/approval/", programId, affiliateId);
+
+            var response = HttpClient.PutAsync(url, null).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public bool DisapproveAffiliate(string programId, string affiliateId)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/{1}/approval/", programId, affiliateId);
+
+            var response = HttpClient.DeleteAsync(url).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public ProgramAffiliate GetProgramAffiliate(string programId, string affiliateId)
+        {
+            var url = GetRequestUrl("/programs/{0}/affiliates/{1}/", programId, affiliateId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<ProgramAffiliate>(response);
+        }
+
+        #endregion
+
         #region Utils
 
         private string GetRequestUrl(string relativePath, params object[] args)
