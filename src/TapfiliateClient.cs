@@ -228,6 +228,78 @@ namespace TapfiliateNet
 
         #endregion
 
+        #region Commission
+
+        public Commission GetCommission (string commissionId)
+        {
+            var url = BaseUrl + "/commissions/" + commissionId + "/";
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<Commission>(response);
+        }
+
+        public bool UpdateCommission(string commissionId, CommissionUpdateRequest commissionUpdateRequest)
+        {
+            var url = BaseUrl + "/commissions/" + commissionId + "/";
+
+            var payLoad = JsonConvert.SerializeObject(commissionUpdateRequest);
+
+            var response = HttpClient.PutAsync(url, new StringContent(payLoad)).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public bool ApproveCommission(string commissionId, bool approved)
+        {
+            var url = BaseUrl + "/commissions/" + commissionId + "/approval";
+
+            var response = HttpClient.PutAsync(url, new StringContent("")).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        public bool DeleteCommission(string commissionId, bool approved)
+        {
+            var url = BaseUrl + "/commissions/" + commissionId + "/approval";
+
+            var response = HttpClient.DeleteAsync(url).Result;
+
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        #endregion
+
+        #region Program
+
+        public Program GetProgram(string programId)
+        {
+            var url = BaseUrl + "/programs/" + programId + "/";
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<Program>(response);
+        }
+
+        public IList<Program> GetAllPrograms (string assetId)
+        {
+            return GetProgramList(null);
+        }
+
+        public IList<Program> GetProgramList (string assetId)
+        {
+            var url = BaseUrl + "/programs/";
+
+            if (assetId != null)
+                url = AddQueryStringToUrl(url, "asset_id", assetId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<IList<Program>>(response);
+        }
+
+        #endregion
+
         #region Utils
         private T GetResponse<T>(HttpResponseMessage response)
         {

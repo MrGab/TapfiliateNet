@@ -53,6 +53,7 @@
     <Compile Include="Model\Program.cs" />
     <Compile Include="Model\Request\AffiliateRequest.cs" />
     <Compile Include="Model\Request\CommissionRequest.cs" />
+    <Compile Include="Model\Request\CommissionUpdateRequest.cs" />
     <Compile Include="Model\Request\ConversionRequest.cs" />
     <Compile Include="TapfiliateClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

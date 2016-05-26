@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TapfiliateNet.Model.Request
 {
-    class CommissionRequest
+    public class CommissionRequest
     {
         [JsonProperty("id")]
         public int Id { get; set;}
