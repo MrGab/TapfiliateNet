@@ -53,12 +53,10 @@
     <Compile Include="Model\Payout.cs" />
     <Compile Include="Model\Program.cs" />
     <Compile Include="Model\ProgramAffiliate.cs" />
+    <Compile Include="Model\ProgramAffiliateReferralLink.cs" />
     <Compile Include="Request\AffiliateRequest.cs" />
     <Compile Include="Request\CommissionRequest.cs" />
-    <Compile Include="Request\CommissionUpdateRequest.cs" />
     <Compile Include="Request\ConversionRequest.cs" />
-    <Compile Include="Request\PayoutRequest.cs" />
-    <Compile Include="Request\ProgramAddAffiliateRequest.cs" />
     <Compile Include="TapfiliateClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
