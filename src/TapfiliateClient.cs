@@ -333,6 +333,39 @@ namespace TapfiliateNet
 
         #endregion
 
+        #region Payout
+
+        public Payout GetPayout(string payoutId)
+        {
+            var url = GetRequestUrl("/payouts/{0}/", payoutId);
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<Payout>(response);
+        }
+
+        public IList<Payout> GetAllPayouts()
+        {
+            var url = GetRequestUrl("/payouts/");
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<IList<Payout>>(response);
+        }
+
+        public IList<Payout> CreatePayout(PayoutRequest payoutRequest)
+        {
+            var url = GetRequestUrl("/payouts/");
+
+            var payLoad = JsonConvert.SerializeObject(payoutRequest);
+
+            var response = HttpClient.PostAsync(url, new StringContent(payLoad)).Result;
+
+            return GetResponse<IList<Payout>>(response);
+        }
+
+        #endregion
+
         #region Utils
 
         private string GetRequestUrl(string relativePath, params object[] args)

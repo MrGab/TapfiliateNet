@@ -57,6 +57,7 @@
     <Compile Include="Request\CommissionRequest.cs" />
     <Compile Include="Request\CommissionUpdateRequest.cs" />
     <Compile Include="Request\ConversionRequest.cs" />
+    <Compile Include="Request\PayoutRequest.cs" />
     <Compile Include="Request\ProgramAddAffiliateRequest.cs" />
     <Compile Include="TapfiliateClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
