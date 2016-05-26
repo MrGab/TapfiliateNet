@@ -11,12 +11,16 @@ namespace TapfiliateNet.Model
     {
         [JsonProperty("id")]
         public int Id { get; set; }
+
         [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
+
         [JsonProperty("affiliate")]
         public PayoutAffiliate Affiliate { get; set; }
+
         [JsonProperty("amount")]
         public double Amount { get; set; }
+
         [JsonProperty("paid")]
         public bool Paid { get; set; }
     }
@@ -25,10 +29,13 @@ namespace TapfiliateNet.Model
     {
         [JsonProperty("id")]
         public int Id { get; set; }
+
         [JsonProperty("firstname")]
         public string FirstName { get; set; }
+
         [JsonProperty("lastname")]
         public string LastName { get; set; }
+
         [JsonProperty("payout_methods")]
         public IList<PayoutAffiliatePayoutMethod> PayoutMethods { get; set; }
     }
@@ -37,10 +44,13 @@ namespace TapfiliateNet.Model
     {
         [JsonProperty("title")]
         public string Title { get; set; }
+
         [JsonProperty("id")]
         public string Id { get; set; }
+
         [JsonProperty("details")]
         public PayoutAffiliatePayoutMethodsDetail Details;
+
         [JsonProperty("primary")]
         public bool Primary { get; set; }
     }
