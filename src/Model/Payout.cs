@@ -13,7 +13,7 @@ namespace TapfiliateNet.Model
         public int Id { get; set; }
 
         [JsonProperty("created_at")]
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("affiliate")]
         public PayoutAffiliate Affiliate { get; set; }
@@ -28,7 +28,7 @@ namespace TapfiliateNet.Model
     public class PayoutAffiliate
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("firstname")]
         public string FirstName { get; set; }

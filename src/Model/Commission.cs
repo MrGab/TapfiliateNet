@@ -12,7 +12,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("amount")]
         public decimal Amount { get; set; }
 
-        [JsonProperty("approved")]
+        [JsonProperty("approved", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Approved { get; set; }
 
         [JsonProperty("type")]
@@ -21,7 +21,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        [JsonProperty("payout")]
+        [JsonProperty("payout", NullValueHandling = NullValueHandling.Ignore)]
         public int Payout { get; set; }
 
         [JsonProperty("commission_type")]
@@ -30,7 +30,7 @@ namespace TapfiliateNet.Model
         [JsonProperty("conversion_sub_amount")]
         public decimal ConversionSubAmount { get; set; }
 
-        [JsonProperty("comment")]
+        [JsonProperty("comment", NullValueHandling = NullValueHandling.Ignore)]
         public string Comment { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace TapfiliateNet.Model
 {
     public class Affiliate : AffiliateBase
     {
-        [JsonProperty("affiliate_id")]
-        public string AffiliateId { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
     }
 }

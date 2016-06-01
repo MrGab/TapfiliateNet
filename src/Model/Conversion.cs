@@ -12,6 +12,9 @@ namespace TapfiliateNet.Model
         [JsonProperty("id")]
         public int Id { get; set; }
 
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; set; }
+
         [JsonProperty("external_id")]
         public string ExternalId { get; set; }
 

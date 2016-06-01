@@ -8,7 +8,7 @@ namespace TapfiliateNet.Request
         public double SubAmount { get; set; }
 
         [JsonProperty("commission_type")]
-        public double CommissionType { get; set; }
+        public string CommissionType { get; set; }
 
         [JsonProperty("comment", NullValueHandling = NullValueHandling.Ignore)]
         public string Comment { get; set; }

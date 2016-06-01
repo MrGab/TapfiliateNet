@@ -24,7 +24,7 @@ namespace TapfiliateNet
         /// <summary>
         /// The api endpoint.
         /// </summary>
-        private const string _baseUrl = "http://tapfiliate.com/api";
+        private const string _baseUrl = "https://tapfiliate.com/api";
 
         /// <summary>
         /// The api version.
@@ -39,7 +39,7 @@ namespace TapfiliateNet
         /// <summary>
         /// Timeout (in seconds)
         /// </summary>
-        private readonly int _timeout = 0;
+        private readonly int _timeout = 20;
 
         /// <summary>
         /// Http Client for API requests
@@ -48,18 +48,16 @@ namespace TapfiliateNet
         {
             get
             {
-                using (var client = new HttpClient())
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("Api-Key", _apiKey);
+
+                if (_timeout != 0)
                 {
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.DefaultRequestHeaders.Add("Api-Key", _apiKey);
-
-                    if (_timeout != 0)
-                    {
-                        client.Timeout = TimeSpan.FromSeconds(_timeout);
-                    }
-
-                    return client;
+                    client.Timeout = TimeSpan.FromSeconds(_timeout);
                 }
+
+                return client;
             }
         }
 
@@ -116,7 +114,7 @@ namespace TapfiliateNet
             }
 
             var response = HttpClient.GetAsync(url).Result;
-
+            
             return GetResponse<IList<Affiliate>>(response);
         }
 
@@ -270,6 +268,17 @@ namespace TapfiliateNet
             var response = HttpClient.GetAsync(url).Result;
 
             return GetResponse<Commission>(response);
+        }
+
+        public List<Commission> GetCommissionListByReseller(string resellingId,DateTime from, DateTime to)
+        {
+
+            var url = GetRequestUrl("/reports/date/?date_from={0}&date_to={1}&sort_by=date&sort_direction=DESC", from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
+
+            var response = HttpClient.GetAsync(url).Result;
+
+            return GetResponse<List<Commission>>(response);
+
         }
 
         public bool UpdateCommission(string commissionId, decimal amount, string comment)

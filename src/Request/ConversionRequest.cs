@@ -29,6 +29,13 @@ namespace TapfiliateNet.Request
         [JsonProperty("program_group")]
         public string ProgramGroup { get; set; }
 
+        public ConversionRequest()
+        {
+            Click = new ConversionClickRequest();
+            Commissions = new List<CommissionRequest>();
+            MetaData = new Dictionary<string, string>();
+        }
+
     }
 
     public class ConversionClickRequest
