@@ -26,6 +26,11 @@ namespace TapfiliateNet.Model
 
         [JsonProperty("company")]
         public AffiliateCompany Company { get; set; }
+
+        public AffiliateBase()
+        {
+            Company = new AffiliateCompany();
+        }
     }
 
     public class AffiliateCompany
@@ -35,6 +40,11 @@ namespace TapfiliateNet.Model
 
         [JsonProperty("address")]
         public AffiliateCompanyAddress Address { get; set; }
+
+        public AffiliateCompany()
+        {
+            Address = new AffiliateCompanyAddress();
+        }
     }
 
     public class AffiliateCompanyAddress
@@ -53,6 +63,11 @@ namespace TapfiliateNet.Model
 
         [JsonProperty("country")]
         public AffiliateCompanyAddressCountry Country { get; set; }
+
+        public AffiliateCompanyAddress()
+        {
+            Country = new AffiliateCompanyAddressCountry();
+        }
     }
 
     public class AffiliateCompanyAddressCountry

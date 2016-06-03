@@ -22,7 +22,7 @@ namespace TapfiliateNet.Model
         public DateTime CreatedAt { get; set; }
 
         [JsonProperty("payout", NullValueHandling = NullValueHandling.Ignore)]
-        public int Payout { get; set; }
+        public CommissionPayout Payout { get; set; }
 
         [JsonProperty("commission_type")]
         public string CommissionType { get; set; }
@@ -32,5 +32,11 @@ namespace TapfiliateNet.Model
 
         [JsonProperty("comment", NullValueHandling = NullValueHandling.Ignore)]
         public string Comment { get; set; }
+    }
+
+    public class CommissionPayout
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
     }
 }
